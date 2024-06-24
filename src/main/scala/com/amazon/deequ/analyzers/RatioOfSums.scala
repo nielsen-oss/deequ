@@ -72,15 +72,11 @@ case class RatioOfSums(
       result: Row,
       offset: Int
   ): Option[RatioOfSumsState] = {
-    if (result.isNullAt(offset)) {
-      None
-    } else {
-      Some(
+    ifNoNullsIn(result, offset, howMany = 2) { _ =>
         RatioOfSumsState(
-          result.getDouble(0),
-          result.getDouble(1)
+          result.getDouble(offset),
+          result.getDouble(offset + 1)
         )
-      )
     }
   }
 
