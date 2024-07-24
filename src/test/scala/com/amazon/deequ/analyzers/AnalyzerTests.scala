@@ -848,7 +848,10 @@ class AnalyzerTests extends AnyWordSpec with Matchers with SparkContextSpec with
       assert(analyzer.calculate(df).fullColumn.isDefined)
     }
 
-    "compute ratio of sums correctly for numeric data" in withSparkSession { sparkSession =>
+  }
+
+  "Ratio of sums" should {
+      "compute ratio of sums correctly for numeric data" in withSparkSession { sparkSession =>
       val df = getDfWithNumericValues(sparkSession)
       RatioOfSums("att1", "att2").calculate(df).value shouldBe Success(21.0 / 18.0)
     }
@@ -858,7 +861,7 @@ class AnalyzerTests extends AnyWordSpec with Matchers with SparkContextSpec with
       assert(RatioOfSums("att1", "att2").calculate(df).value.isFailure)
     }
 
-    "divide by zero" in withSparkSession { sparkSession =>
+    "fail if divide by zero" in withSparkSession { sparkSession =>
       val df = getDfWithNumericValues(sparkSession)
       val testVal = RatioOfSums("att1", "att2", Some("item IN ('1', '2')")).calculate(df)
       assert(testVal.value.isSuccess)
